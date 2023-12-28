@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Inventory API
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      summary: Retrieve all items
+      responses:
+        "200":
+          description: Successful response
+    post:
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              name: "Product A"
+              quantity: 10
+              price: 29.99
+      responses:
+        "201":
+          description: Item created successfully
+
+  /items/{itemId}:
+    get:
+      summary: Retrieve a specific item
+      parameters:
+        - in: path
+          name: itemId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+    put:
+      summary: Update a specific item
+      parameters:
+        - in: path
+          name: itemId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              name: "Updated Product A"
+              quantity: 15
+              price: 39.99
+      responses:
+        "200":
+          description: Item updated successfully
+    delete:
+      summary: Delete a specific item
+      parameters:
+        - in: path
+          name: itemId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Item deleted successfully
