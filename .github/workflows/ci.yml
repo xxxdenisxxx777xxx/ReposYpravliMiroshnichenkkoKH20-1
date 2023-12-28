@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - CI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile program
+        run: npm run build
+
+      - name: Run linters
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t my_image .
+          docker tag my_image my_registr/my_image:latest
+
+      - name: Push Docker image
+        run: docker push my_registr/my_image:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        run: |
